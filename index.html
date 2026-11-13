@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Yaneliua — Violin &amp; Piano Teacher Online</title>
+  <meta name="description" content="Professional violin lessons (all levels, ages 10+) and piano basics online. Live violin for weddings and marriage proposals. Lessons in Ukrainian.">
+  <meta name="theme-color" content="#0a1020">
+    <meta property="og:title" content="Yaneliua — Violin & Piano Teacher Online">
+    <meta property="og:description" content="Violin lessons for all levels, piano basics, and live violin for weddings and proposals online.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/img/hero.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    
+    .lang-switcher {
+      display: flex; align-items: center; gap: 4px;
+      margin-right: 4px;
+    }
+    .lang-btn {
+      background: none; border: 1px solid transparent;
+      padding: 4px 8px; border-radius: 6px;
+      font-size: .72rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+      color: var(--text-2); cursor: pointer;
+      transition: color .2s, border-color .2s, background .2s;
+      line-height: 1;
+    }
+    .lang-btn:hover { color: var(--text); border-color: var(--line); }
+    .lang-btn[aria-current="true"] {
+      color: var(--accent); border-color: var(--accent);
+      background: rgba(124,156,207,.10);
+    }
+
+    
+    [data-en], [data-ua], [data-pl] { display: none; }
+    [data-lang="en"] [data-en] { display: revert; }
+    [data-lang="ua"] [data-ua] { display: revert; }
+    [data-lang="pl"] [data-pl] { display: revert; }
+
+    
+    span[data-en], span[data-ua], span[data-pl],
+    em[data-en],   em[data-ua],   em[data-pl],
+    strong[data-en],strong[data-ua],strong[data-pl],
+    a[data-en],    a[data-ua],    a[data-pl],
+    option[data-en],option[data-ua],option[data-pl] {
+      display: none;
+    }
+    [data-lang="en"] span[data-en],[data-lang="en"] em[data-en],[data-lang="en"] strong[data-en],[data-lang="en"] a[data-en],[data-lang="en"] option[data-en] { display: inline; }
+    [data-lang="ua"] span[data-ua],[data-lang="ua"] em[data-ua],[data-lang="ua"] strong[data-ua],[data-lang="ua"] a[data-ua],[data-lang="ua"] option[data-ua] { display: inline; }
+    [data-lang="pl"] span[data-pl],[data-lang="pl"] em[data-pl],[data-lang="pl"] strong[data-pl],[data-lang="pl"] a[data-pl],[data-lang="pl"] option[data-pl] { display: inline; }
+
+    
+    li[data-en],li[data-ua],li[data-pl] { display: none; }
+    [data-lang="en"] li[data-en] { display: list-item; }
+    [data-lang="ua"] li[data-ua] { display: list-item; }
+    [data-lang="pl"] li[data-pl] { display: list-item; }
+
+    
+    label[data-en],label[data-ua],label[data-pl] { display: none; }
+    [data-lang="en"] label[data-en],[data-lang="ua"] label[data-ua],[data-lang="pl"] label[data-pl] { display: block; }
+
+    
+    input[data-ph-en]::placeholder, textarea[data-ph-en]::placeholder { content: attr(data-ph-en); }
+  </style>
+
+  <script>
+    document.documentElement.classList.add('js');
+    try {
+      var t = localStorage.getItem('yanelia-theme');
+      if (!t && window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) t = 'light';
+      if (t) document.documentElement.setAttribute('data-theme', t);
+      var l = localStorage.getItem('yanelia-lang');
+      if (l) document.documentElement.setAttribute('data-lang', l);
+    } catch (e) {}
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Yaneliua",
+    "jobTitle": "Violin and piano teacher, violinist",
+    "knowsLanguage": ["uk", "pl", "en"],
+    "address": { "@type": "PostalAddress", "addressCountry": "UA" },
+    "sameAs": ["https://www.instagram.com/yaneliua"]
+  }
+  </script>
+  <style>
+    
+    .bg-violins {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0.05;
+    }
+    .violin-bg {
+      position: absolute;
+      animation: float 15s infinite linear;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); }
+      100% { transform: translateY(-100px) rotate(360deg); }
+    }
+    .bg-violins {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0.05;
+    }
+    .violin-bg {
+      position: absolute;
+      bottom: -100px;
+      animation: float 20s infinite linear;
+    }
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-110vh) rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-violins" id="bgViolins"></div>
+  <script>
+    const container = document.getElementById('bgViolins');
+    const violinSvg = `<svg viewBox="-51.2 -51.2 614.40 614.40" width="50" height="50" fill="currentColor"><path d="M509.475,30.246l-27.72-27.72c-3.747-3.745-9.962-3.26-13.08,1.027L448.49,31.306l-3.48-3.48 c-6.558-6.559-17.194-6.559-23.753,0s-6.559,17.193,0,23.753l5.726,5.726l-12.887,12.887l-5.726-5.726 c-6.558-6.559-17.194-6.559-23.753,0s-6.559,17.193,0,23.753l5.726,5.726l-68.355,68.355 c-36.895-25.628-84.727-24.823-113.873,4.323l-0.001,0.002c-9.224,9.224-18.915,17.859-29.028,25.911 c7.19,18.739,1.137,43.33-16.863,61.329c-22.95,22.95-50.364,32.744-68.949,14.16c-3.894-3.894-6.805-8.458-8.781-13.441 c-10.69,3.813-21.635,7.171-32.828,10.052c-11.683,3.006-21.983,8.573-30.257,16.846c-34.97,34.97-26.884,100.769,22.703,158.821 L8.561,489.745c-2.385,3.328-2.523,7.948,0,11.456c3.163,4.399,9.295,5.403,13.695,2.238l49.442-35.548 c58.051,49.585,123.851,57.672,158.821,22.703c8.275-8.275,13.84-18.574,16.846-30.257c2.87-11.153,6.243-22.099,10.082-32.816 c-4.994-1.976-9.568-4.891-13.471-8.793c-18.584-18.584-8.79-45.999,14.159-68.949c18.013-18.013,42.627-24.061,61.37-16.846 c8.061-10.159,16.687-19.863,25.871-29.047c29.146-29.147,29.951-76.977,4.323-113.872l68.355-68.355l5.726,5.726 c6.558,6.559,17.193,6.56,23.753,0c6.559-6.559,6.559-17.193,0-23.753l-5.726-5.726l12.887-12.887l5.726,5.726 c6.558,6.559,17.194,6.56,23.753,0c6.559-6.559,6.559-17.193,0-23.753l-3.48-3.48l27.754-20.184 C512.734,40.209,513.223,33.994,509.475,30.246z M156.838,392.161c-0.197,2.516-1.486,4.818-3.527,6.303l-44.851,32.619 c-3.434,2.497-8.174,2.125-11.176-0.877l-15.488-15.488c-3.002-3.002-3.374-7.743-0.877-11.176l32.619-44.851 c1.485-2.041,3.788-3.33,6.303-3.527c2.516-0.197,4.992,0.717,6.777,2.5l27.721,27.721 C156.121,387.17,157.035,389.645,156.838,392.161z M184.436,298.954c-12.93,0.945-22.166,6.451-39.408,12.45 c-13.638,4.694-31.386,9.164-44.551,3.22c-4.457-1.773-8.869-5.555-11.027-10.584c3.097,0.868,8.017,2.4,12.816,1.462 c11.862-1.845,20.771-6.791,36.446-12.233c13.669-4.695,31.316-9.136,44.546-3.197c4.558,1.81,8.398,5.209,11.032,10.56 C193.191,300.327,188.058,298.561,184.436,298.954z M218.731,373.289c-5.442,15.675-10.388,24.584-12.233,36.446 c-0.937,4.799,0.595,9.718,1.462,12.815c-5.029-2.157-8.811-6.571-10.584-11.027c-5.943-13.165-1.475-30.912,3.22-44.551 c5.998-17.242,11.504-26.478,12.45-39.408c0.393-3.621-1.372-8.754-1.68-9.854c5.351,2.634,8.751,6.473,10.56,11.032 C227.867,341.974,223.426,359.621,218.731,373.289z"/></svg>`;
+    const pianoSvg = `<svg viewBox="0 0 24 24" width="50" height="50" fill="currentColor"><path d="M5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3H19q0.83,0 1.41,0.59T21,5V19q0,0.82-0.59,1.41T19,21H5Zm0-2H8.25V14.5H8q-0.42,0-0.71-0.29Q7,13.93 7,13.5V5H5V19Zm10.75,0H19V5H17v8.5q0,0.42-0.29,0.71T16,14.5H15.75V19Zm-6,0h4.5V14.5H14q-0.42,0-0.71-0.29Q13,13.93 13,13.5V5H11v8.5q0,0.42-0.29,0.71T10,14.5H9.75V19Z"/></svg>`;
+    const items = [violinSvg, pianoSvg];
+    for (let i = 0; i < 15; i++) {
+      const div = document.createElement('div');
+      div.className = 'violin-bg';
+      div.style.left = Math.random() * 100 + '%';
+      div.style.animationDelay = Math.random() * 20 + 's';
+      div.innerHTML = items[Math.floor(Math.random() * items.length)];
+      container.appendChild(div);
+    }
+  </script>
+  <a class="skip" href="#main"
+     data-en data-ua data-pl>
+    <span data-en>Skip to content</span>
+    <span data-ua>Перейти до змісту</span>
+    <span data-pl>Przejdź do treści</span>
+  </a>
+
+  
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="Yaneliua — home">Yaneliua</a>
+
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="#about"    data-en>About</a>
+        <a href="#about"    data-ua>Про мене</a>
+        <a href="#about"    data-pl>O mnie</a>
+
+        <a href="#services" data-en>Lessons &amp; Events</a>
+        <a href="#services" data-ua>Уроки та події</a>
+        <a href="#services" data-pl>Lekcje i events</a>
+
+        <a href="#reviews"  data-en>Reviews</a>
+        <a href="#reviews"  data-ua>Відгуки</a>
+        <a href="#reviews"  data-pl>Opinie</a>
+
+        <a href="#gallery"  data-en>Gallery</a>
+        <a href="#gallery"  data-ua>Галерея</a>
+        <a href="#gallery"  data-pl>Galeria</a>
+
+        <a href="#contact" class="nav-cta" data-en>Book</a>
+        <a href="#contact" class="nav-cta" data-ua>Записатись</a>
+        <a href="#contact" class="nav-cta" data-pl>Zapisz się</a>
+      </nav>
+
+      <div class="header-tools">
+        
+        <div class="lang-switcher" role="group" aria-label="Language / Мова / Język">
+          <button class="lang-btn" data-lang-btn="en" aria-current="true"  type="button">EN</button>
+          <button class="lang-btn" data-lang-btn="ua" aria-current="false" type="button">UA</button>
+          <button class="lang-btn" data-lang-btn="pl" aria-current="false" type="button">PL</button>
+        </div>
+
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow reveal">
+            <span data-en>Violin · Piano · Live performance</span>
+            <span data-ua>Скрипка · Фортепіано · Живий виступ</span>
+            <span data-pl>Skrzypce · Fortepian · Muzyka na żywo</span>
+          </p>
+          <h1 class="reveal">
+            <span data-en>Online violin lessons — from scratch or after music school</span>
+            <span data-ua>Уроки скрипки онлайн — з нуля чи після музичної школи</span>
+            <span data-pl>Lekcje skrzypiec online — od podstaw lub po szkole muzycznej</span>
+          </h1>
+          <p class="lead reveal">
+            <span data-en>Don't know the notes, have a little experience or have already graduated from music school — I will choose a program specifically for your level. Professional teacher, calm and clear.</span>
+            <span data-ua>Не знаєте нот, маєте трохи досвіду чи вже закінчили музичну школу — я підберу програму саме під ваш рівень. Професійна викладачка, українською мовою, спокійно і зрозуміло.</span>
+            <span data-pl>Nie znasz nut, masz niewielkie doświadczenie lub ukończyłeś już szkołę muzyczną — dobiorę program specjalnie do Twojego poziomu. Profesjonalna nauczycielka, spokojnie i zrozumiale.</span>
+          </p>
+
+                    <div class="hero-cta reveal">
+                      <a href="#contact" class="btn btn-primary">
+                        <span data-en>Book a lesson</span>
+                        <span data-ua>Записатися на урок</span>
+                        <span data-pl>Zapisz się na lekcję</span>
+                      </a>
+                    </div>
+         
+                    <ul class="hero-facts reveal" aria-label="At a glance">
+                      <li><strong>UA</strong><span data-en>lesson language</span><span data-ua>мова навчання</span><span data-pl>język lekcji</span></li>
+                      <li><strong>Online</strong><span data-en>worldwide</span><span data-ua>&amp; онлайн по всьому світу</span><span data-pl>&amp; online na całym świecie</span></li>
+                    </ul>
+        </div>
+
+        <figure class="hero-media reveal">
+          <img src="assets/img/hero.jpg" width="1000" height="1500"
+               alt="Yaneliua standing with her violin on stage" fetchpriority="high">
+        </figure>
+      </div>
+    </section>
+
+    
+    <section class="section" id="about">
+      <div class="container about-grid">
+        <figure class="about-media reveal">
+          <img src="assets/img/about.jpg" width="800" height="1200" alt="Yaneliua playing the violin in front of a palace" loading="lazy">
+        </figure>
+
+        <div class="about-copy">
+          <p class="eyebrow reveal">
+            <span data-en>About me</span>
+            <span data-ua>Про мене</span>
+            <span data-pl>O mnie</span>
+          </p>
+          <h2 class="reveal">
+            <span data-en>Professional approach to music.</span>
+            <span data-ua>Професійний підхід до музики.</span>
+            <span data-pl>Profesjonalne podejście do muzyki.</span>
+          </h2>
+          <p class="reveal">
+            <span data-en>I'm Yaneliua — a professional violinist and teacher. I perform on stage and at private celebrations, and I teach students who want real progress.</span>
+            <span data-ua>Я Янелія — професійна скрипалька та викладач. Виступаю на сцені та приватних святкуваннях, і навчаю учнів, які прагнуть реального прогресу.</span>
+            <span data-pl>Jestem Yaneliua — profesjonalną skrzypaczką i nauczycielką. Występuję na scenie i na prywatnych uroczystościach, a uczę tych, którzy chcą prawdziwego postępu.</span>
+          </p>
+          <p class="reveal">
+            <span data-en>Every lesson is built around your goals and pace. I focus on clear results and musical development, ensuring you stay motivated and engaged.</span>
+            <span data-ua>Кожен урок будується навколо ваших цілей та темпу. Я фокусуюся на чітких результатах та музичному розвитку, щоб ви залишалися вмотивованими.</span>
+            <span data-pl>Każda lekcja jest budowana wokół twoich celów i tempa. Skupiam się na wyraźnych wynikach i rozwoju muzycznym, abyś pozostał zmotywowany.</span>
+          </p>
+
+          <ul class="pillars reveal">
+            <li>
+              <h3 data-en>Individual approach</h3>
+              <h3 data-ua>Індивідуальний підхід</h3>
+              <h3 data-pl>Indywidualne podejście</h3>
+              <p data-en>A program tailored to your level and goals.</p>
+              <p data-ua>Програма, підлаштована під ваш рівень та цілі.</p>
+              <p data-pl>Program dopasowany do twojego poziomu i celów.</p>
+            </li>
+            <li>
+              <h3 data-en>Discipline and results</h3>
+              <h3 data-ua>Дисципліна та результат</h3>
+              <h3 data-pl>Dyscyplina i rezultat</h3>
+              <p data-en>Structured lessons focused on real progress.</p>
+              <p data-ua>Структуровані заняття з фокусом на реальний прогрес.</p>
+              <p data-pl>Ustrukturyzowane lekcje skupione na prawdziwym postępie.</p>
+            </li>
+            <li>
+              <h3 data-en>Ukrainian language</h3>
+              <h3 data-ua>Українська мова</h3>
+              <h3 data-pl>Język ukraiński</h3>
+              <p data-en>Lessons in Ukrainian — comfortable and clear.</p>
+              <p data-ua>Уроки українською мовою — комфортно та зрозуміло.</p>
+              <p data-pl>Lekcje w języku ukraińskim — komfortowo i jasno.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="section section-alt" id="services">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">
+            <span data-en>Lessons &amp; Events</span>
+            <span data-ua>Уроки та події</span>
+            <span data-pl>Lekcje i events</span>
+          </p>
+          <h2>
+            <span data-en>What I offer</span>
+            <span data-ua>Що я пропоную</span>
+            <span data-pl>Co oferuję</span>
+          </h2>
+          <p class="section-sub">
+            <span data-en>Private tuition and live performance — in person in Warsaw, and lessons online from anywhere in the world.</span>
+            <span data-ua>Приватне навчання та живі виступи — особисто у Варшаві, а також уроки онлайн з будь-якої точки світу.</span>
+            <span data-pl>Prywatne korepetycje i występy na żywo — osobiście w Warszawie, a lekcje online z dowolnego miejsca na świecie.</span>
+          </p>
+        </header>
+
+        <div class="cards">
+
+          <article class="card reveal">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="-51.2 -51.2 614.40 614.40" fill="currentColor" style="color: #ffffff;"><path d="M509.475,30.246l-27.72-27.72c-3.747-3.745-9.962-3.26-13.08,1.027L448.49,31.306l-3.48-3.48 c-6.558-6.559-17.194-6.559-23.753,0s-6.559,17.193,0,23.753l5.726,5.726l-12.887,12.887l-5.726-5.726 c-6.558-6.559-17.194-6.559-23.753,0s-6.559,17.193,0,23.753l5.726,5.726l-68.355,68.355 c-36.895-25.628-84.727-24.823-113.873,4.323l-0.001,0.002c-9.224,9.224-18.915,17.859-29.028,25.911 c7.19,18.739,1.137,43.33-16.863,61.329c-22.95,22.95-50.364,32.744-68.949,14.16c-3.894-3.894-6.805-8.458-8.781-13.441 c-10.69,3.813-21.635,7.171-32.828,10.052c-11.683,3.006-21.983,8.573-30.257,16.846c-34.97,34.97-26.884,100.769,22.703,158.821 L8.561,489.745c-2.385,3.328-2.523,7.948,0,11.456c3.163,4.399,9.295,5.403,13.695,2.238l49.442-35.548 c58.051,49.585,123.851,57.672,158.821,22.703c8.275-8.275,13.84-18.574,16.846-30.257c2.87-11.153,6.243-22.099,10.082-32.816 c-4.994-1.976-9.568-4.891-13.471-8.793c-18.584-18.584-8.79-45.999,14.159-68.949c18.013-18.013,42.627-24.061,61.37-16.846 c8.061-10.159,16.687-19.863,25.871-29.047c29.146-29.147,29.951-76.977,4.323-113.872l68.355-68.355l5.726,5.726 c6.558,6.559,17.193,6.56,23.753,0c6.559-6.559,6.559-17.193,0-23.753l-5.726-5.726l12.887-12.887l5.726,5.726 c6.558,6.559,17.194,6.56,23.753,0c6.559-6.559,6.559-17.193,0-23.753l-3.48-3.48l27.754-20.184 C512.734,40.209,513.223,33.994,509.475,30.246z M156.838,392.161c-0.197,2.516-1.486,4.818-3.527,6.303l-44.851,32.619 c-3.434,2.497-8.174,2.125-11.176-0.877l-15.488-15.488c-3.002-3.002-3.374-7.743-0.877-11.176l32.619-44.851 c1.485-2.041,3.788-3.33,6.303-3.527c2.516-0.197,4.992,0.717,6.777,2.5l27.721,27.721 C156.121,387.17,157.035,389.645,156.838,392.161z M184.436,298.954c-12.93,0.945-22.166,6.451-39.408,12.45 c-13.638,4.694-31.386,9.164-44.551,3.22c-4.457-1.773-8.869-5.555-11.027-10.584c3.097,0.868,8.017,2.4,12.816,1.462 c11.862-1.845,20.771-6.791,36.446-12.233c13.669-4.695,31.316-9.136,44.546-3.197c4.558,1.81,8.398,5.209,11.032,10.56 C193.191,300.327,188.058,298.561,184.436,298.954z M218.731,373.289c-5.442,15.675-10.388,24.584-12.233,36.446 c-0.937,4.799,0.595,9.718,1.462,12.815c-5.029-2.157-8.811-6.571-10.584-11.027c-5.943-13.165-1.475-30.912,3.22-44.551 c5.998-17.242,11.504-26.478,12.45-39.408c0.393-3.621-1.372-8.754-1.68-9.854c5.351,2.634,8.751,6.473,10.56,11.032 C227.867,341.974,223.426,359.621,218.731,373.289z"/></svg>
+            </div>
+            <h3 data-en>Violin lessons</h3>
+            <h3 data-ua>Уроки скрипки</h3>
+            <h3 data-pl>Lekcje skrzypiec</h3>
+            <p class="card-desc" data-en>Violin lessons for beginners (from scratch), those who have completed music school, or those returning after a long break.</p>
+            <p class="card-desc" data-ua>Уроки скрипки: навчання з нуля, для тих, хто закінчив музичну школу, або має тривалу перерву у грі.</p>
+            <p class="card-desc" data-pl>Lekcje skrzypiec: nauka od podstaw, dla osób po szkole muzycznej lub z długą przerwą w grze.</p>
+            <ul class="ticks">
+              <li data-en>Individual program for every level</li>
+              <li data-ua>Індивідуальна програма для кожного рівня</li>
+              <li data-pl>Indywidualny program dla każdego poziomu</li>
+
+              <li data-en>Technique, repertoire &amp; musical development</li>
+              <li data-ua>Техніка, репертуар та музичний розвиток</li>
+              <li data-pl>Technika, repertuar i rozwój muzyczny</li>
+
+              <li data-en>Online · UA</li>
+              <li data-ua>Онлайн · UA</li>
+              <li data-pl>Online · UA</li>
+            </ul>
+            <div class="card-foot">
+              <a class="link-arrow" href="#contact" data-interest="violin" data-en>Book a lesson</a>
+              <a class="link-arrow" href="#contact" data-interest="violin" data-ua>Записатись</a>
+              <a class="link-arrow" href="#contact" data-interest="violin" data-pl>Umów lekcję</a>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3H19q0.83,0 1.41,0.59T21,5V19q0,0.82-0.59,1.41T19,21H5Zm0-2H8.25V14.5H8q-0.42,0-0.71-0.29Q7,13.93 7,13.5V5H5V19Zm10.75,0H19V5H17v8.5q0,0.42-0.29,0.71T16,14.5H15.75V19Zm-6,0h4.5V14.5H14q-0.42,0-0.71-0.29Q13,13.93 13,13.5V5H11v8.5q0,0.42-0.29,0.71T10,14.5H9.75V19Z"/></svg>
+            </div>
+            <h3 data-en>Piano — the basics</h3>
+            <h3 data-ua>Фортепіано — основи</h3>
+            <h3 data-pl>Fortepian — podstawy</h3>
+            <p class="card-desc" data-en>Piano basics for students (grades 1–4).</p>
+            <p class="card-desc" data-ua>Допомога з основами фортепіано для учнів (1–4 класи).</p>
+            <p class="card-desc" data-pl>Pomoc w podstawach gry na fortepianie dla uczniów (klasy 1–4).</p>
+            <ul class="ticks">
+              <li data-en>Support with basics</li>
+              <li data-ua>Допомога з основами</li>
+              <li data-pl>Pomoc w podstawach</li>
+
+              <li data-en>Online</li>
+              <li data-ua>Онлайн</li>
+              <li data-pl>Online</li>
+            </ul>
+            <div class="card-foot">
+              <a class="link-arrow" href="#contact" data-interest="piano" data-en>Book piano</a>
+              <a class="link-arrow" href="#contact" data-interest="piano" data-ua>Записатись</a>
+              <a class="link-arrow" href="#contact" data-interest="piano" data-pl>Umów lekcję</a>
+            </div>
+          </article>
+
+          <article class="card card-feature reveal">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 8a4.3 4.3 0 0 1 7.5 2.5c0 5.4-7.5 10-7.5 10z"/></svg>
+            </div>
+            <h3 data-en>Live violin for your day (Warsaw only)</h3>
+            <h3 data-ua>Жива скрипка на ваше свято (тільки Варшава)</h3>
+            <h3 data-pl>Żywe skrzypce na Twoją uroczystość (tylko Warszawa)</h3>
+            <p class="card-desc" data-en>I will play at a wedding, proposal or other important event. We will choose the repertoire together.</p>
+            <p class="card-desc" data-ua>Зіграю на весіллі, освідченні чи іншій важливій події. Репертуар підберемо разом.</p>
+            <p class="card-desc" data-pl>Zagram na weselu, oświadczynach lub innym ważnym wydarzeniu. Repertuar dobierzemy razem.</p>
+            <ul class="ticks">
+              <li data-en>Weddings &amp; proposals</li>
+              <li data-ua>Весілля та освідчення</li>
+              <li data-pl>Śluby i oświadczyny</li>
+
+              <li data-en>Curated repertoire</li>
+              <li data-ua>Готовий репертуар</li>
+              <li data-pl>Gotowy repertuar</li>
+            </ul>
+            <div class="card-foot">
+              <p class="price price-quote">
+                <strong data-en>Get in touch</strong>
+                <strong data-ua>Зв'яжіться з нами</strong>
+                <strong data-pl>Skontaktuj się</strong>
+                <span data-en>for availability &amp; a quote</span>
+                <span data-ua>щодо наявності та вартості</span>
+                <span data-pl>w sprawie dostępności i wyceny</span>
+              </p>
+              <a class="link-arrow" href="#contact" data-interest="wedding" data-en>Enquire</a>
+              <a class="link-arrow" href="#contact" data-interest="wedding" data-ua>Запитати</a>
+              <a class="link-arrow" href="#contact" data-interest="wedding" data-pl>Zapytaj</a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="section" id="reviews">
+      <div class="container">
+        <header class="section-head section-head-row reveal">
+          <div>
+            <p class="eyebrow">
+              <span data-en>Reviews</span>
+              <span data-ua>Відгуки</span>
+              <span data-pl>Opinie</span>
+            </p>
+            <h2>
+              <span data-en>What my students say</span>
+              <span data-ua>Що кажуть мої учні</span>
+              <span data-pl>Co mówią moi uczniowie</span>
+            </h2>
+          </div>
+          <div class="slider-nav" aria-label="Reviews navigation">
+            <button class="icon-btn" id="revPrev" type="button" aria-label="Previous review"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+            <button class="icon-btn" id="revNext" type="button" aria-label="Next review"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          </div>
+        </header>
+
+        <div class="reviews" id="reviewTrack" tabindex="0" aria-label="Customer reviews">
+
+          <blockquote class="review reveal">
+            <div class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+            <p>Привітик, хотіла щиро подякувати тобі за те, що допомогла мені підготувати стільки пісень на весілля сестри Вона була дуже задоволена, що я змогла для них зіграти. Я й сама не очікувала, що зможу вивчити аж 7 пісень, думала що впораюсь лише з 3–4.<br><br>З тобою займатися дуже легко, приємно і все завжди зрозуміло!<br>Хочу й надалі розвивати свою гру на скрипці, тому буду дуже рада приходити до тебе на уроки ще!<br>Якби не ти, я б не почувалася так впевнено і не змогла б зіграти стільки класних нових пісень.<br>Ще раз щиро тобі дякую</p>
+          </blockquote>
+
+          <blockquote class="review reveal">
+            <div class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+            <p>бажання грати на скрипці не було, а з'явилось велике бажання, хотіла грати і досягати, вивчати щось нове, коли почалась педпрактика з Яною, яка тривала рік. Вона підтримувала та завжди допомагала. Завдяки її порадам і мотивації я змогла гарно скласти іспит. Яна не тільки вміє заохотити, а ще гарно пояснює і доступно. Було приємно з нею працювати — спокійна, уважна й завжди вміла знайти підхід. Також прекрасна людина, з якою просто класно поспілкуватись. Дякую за підтримку і за те, що вірила в мене</p>
+          </blockquote>
+
+          <blockquote class="review reveal">
+            <div class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+            <p>Я не обирав Янелію як вчителя, і з певних причин не хотів брати уроки саме в неї. Але вона знала, що я дуже хочу вчитися грати на скрипці, і в мене є свій інструмент. Вона шукала підхід до мене, і після першого уроку я вже чекав, коли знову візьму скрипку . Янеля не буде заїжджувати одну й ту саму мелодію, вона бачить, коли потрібно рухатись далі. Тут у нас виникло непорозуміння, наші заняття обірвались . Та невдовзі, коли я зрозумів сам, що одна й та сама мелодія відштовхує мене від інструменту, я зрозумів, що вона була права. Після чого ми розібрали нову мелодію, що покращило гру пальців, постановку, і коли я повернувся до попереднього твору, його стало грати легше та продуктивніше.<br>Я рекомендую Янелію як вчителя!<br>Вона чудово справляється і допоможе вам полюбити скрипку, мати бажання розвиватися та не відкладати це на задній план.</p>
+          </blockquote>
+
+          <blockquote class="review reveal">
+            <div class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+            <p>завдяки тобі я навчилась дисциплінувати себе, регулярно присвячувати час улюбленій справі. ти пояснювала мені матеріал доступно, і так, що запам'ятаю надовго. заняття з тобою це не лише про музику, але і про навички досягати своїх цілей. на уроках була атмосфера спокою і дисципліни, я не боялась помилятись, ти з терпінням пояснювала мені десятки разів як правильно, коли я не розуміла) дуже дякую</p>
+          </blockquote>
+
+          <blockquote class="review reveal">
+            <div class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+            <p>Я дуже рада, що мала можливість навчатися у тебе на уроках скрипки. За цей період я змогла знову пригадати важливу базу знань і застосувати її на практиці разом із тобою.<br><br>Ти точно допомогла мені пригадати, що таке discipline та стабільність у грі, а також бажання постійно рухатися далі й розвиватися.<br><br>Уроки скрипки були не лише про «знання», а й про твою підтримку, простоту у спілкуванні та щиру радість від того, що ти робиш.<br><br>Як і всі, я очікувала результатів від уроків.<br>Ми займаємося не так багато часу, але, незважаючи на це, я вже побачила результат, це мотивує іти дальше і для мене це дуже цінно та важливо.<br><br>Вогник у моєму серці до скрипки став ще більший і зросло бажання рухатись до мети<br>Дякую!</p>
+          </blockquote>
+
+          <blockquote class="review reveal">
+            <div class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</div>
+            <p>Хочемо від щирого серця подякувати тобі за неймовірну атмосферу, яку ти створила на нашому весіллі своєю грою на скрипці! Це було настільки красиво, ніжно й душевно, що неможливо було залишитися байдужими. Твоя талановита гра вражала абсолютно всіх наших гостей, навіть багато хто після весілля окремо підходили і казали як гарно було, наскільки чарівно та атмосферно звучала скрипка.<br><br>Ми дуже раді, що саме ти була частинкою нашого особливого дня. Твій талант, професіоналізм і неймовірна подача справді залишили по собі дуже теплі спогади. Щиро дякуємо тобі за цю красу та атмосферу!<br><br>Однозначно рекомендуємо тебе всім, і будемо тебе рекомендувати тим хто хоче зробити своє свято особливим, стильним і по-справжньому незабутнім. Ти — справжня майстриня своєї справи!<br>Божих благословінь тобі в цій справі</p>
+          </blockquote>
+
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="section section-alt" id="gallery">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">
+            <span data-en>Gallery</span>
+            <span data-ua>Галерея</span>
+            <span data-pl>Galeria</span>
+          </p>
+          <h2>
+            <span data-en>Moments &amp; performances</span>
+            <span data-ua>Моменти та виступи</span>
+            <span data-pl>Chwile i występy</span>
+          </h2>
+          <p class="section-sub">
+            <span data-en>A glimpse of concerts, celebrations and sessions in Warsaw.</span>
+            <span data-ua>Погляд на концерти, свята та сесії у Варшаві.</span>
+            <span data-pl>Spojrzenie na koncerty, uroczystości i sesje w Warszawie.</span>
+          </p>
+        </header>
+
+        <div class="gallery">
+          <button class="g-item reveal" type="button" data-full="assets/img/g1.jpg" data-alt="Yaneliua playing violin among autumn leaves"><img src="assets/img/g1.jpg" width="733" height="1100" alt="Yaneliua playing violin among autumn leaves" loading="lazy"></button>
+          <button class="g-item reveal" type="button" data-full="assets/img/g8.jpg" data-alt="Live performance on stage"><img src="assets/img/g8.jpg" width="1280" height="720" alt="Live performance on stage" loading="lazy"></button>
+          <button class="g-item reveal" type="button" data-full="assets/img/g7.jpg" data-alt="Playing in a blue dress at sunset"><img src="assets/img/g7.jpg" width="735" height="1100" alt="Yaneliua playing violin in a blue dress at sunset" loading="lazy"></button>
+          <button class="g-item reveal" type="button" data-full="assets/img/g6.jpg" data-alt="Violin close-up"><img src="assets/img/g6.jpg" width="733" height="1100" alt="Close-up of the violin and bow" loading="lazy"></button>
+          <button class="g-item reveal" type="button" data-full="assets/img/g9.jpg" data-alt="Duo performance at an event"><img src="assets/img/g9.jpg" width="825" height="1100" alt="Duo performance at an event" loading="lazy"></button>
+          <button class="g-item reveal" type="button" data-full="assets/img/g2.jpg" data-alt="Violin in the golden hour"><img src="assets/img/g2.jpg" width="733" height="1100" alt="Yaneliua with her violin in golden light" loading="lazy"></button>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="section" id="contact">
+      <div class="container contact-grid">
+
+        <div class="contact-info">
+          <p class="eyebrow reveal">
+            <span data-en>Contact</span>
+            <span data-ua>Контакт</span>
+            <span data-pl>Kontakt</span>
+          </p>
+          <h2 class="reveal">
+            <span data-en>Ready to start?</span>
+                        <span data-ua>Готові почати?</span>
+                        <span data-pl>Gotowi zacząć?</span>
+          </h2>
+          <p class="reveal">
+            <span data-en>Write me on Instagram — tell me about your level and goal, and we'll pick a convenient time for the first lesson.</span>
+                        <span data-ua>Напишіть мені в Instagram — розкажіть про свій рівень і мету, і ми підберемо зручний час для першого уроку.</span>
+                        <span data-pl>Napisz do mnie na Instagram — opowiedz o swoim poziomie i celu, a wygodny czas na pierwszą lekcję dobierzemy razem.</span>
+          </p>
+
+                                  <div class="contact-cta reveal">
+                                    <a class="btn btn-primary" href="https://www.instagram.com/yaneliua" target="_blank" rel="noopener">
+                                      <span data-en>Write on Instagram</span>
+                                      <span data-ua>Написати в Instagram</span>
+                                      <span data-pl>Napisz na Instagram</span>
+                                    </a>
+                                  </div>
+
+          <ul class="contact-list reveal">
+  <li>
+    <span class="ci" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6"/></svg>
+    </span>
+    <div><small>Instagram</small><a href="https://www.instagram.com/yaneliua" target="_blank" rel="noopener">@yaneliua</a></div>
+  </li>
+  <li>
+    <span class="ci" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M12 21s7-6 7-11.5A7 7 0 0 0 5 9.5C5 15 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+    </span>
+    <div>
+      <div data-en><small>Location</small><span>online worldwide</span></div>
+            <div data-ua><small>Місцезнаходження</small><span>онлайн по всьому світу</span></div>
+            <div data-pl><small>Lokalizacja</small><span>online na całym świecie</span></div>
+    </div>
+  </li>
+</ul>
+        </div>
+
+        
+
+      </div>
+    </section>
+  </main>
+
+  
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a class="brand" href="#top">Yaneliua</a>
+      <p>
+        <span data-en>Violin &amp; piano teacher · Online</span>
+                <span data-ua>Вчитель скрипки та фортепіано · Онлайн</span>
+                <span data-pl>Nauczycielka skrzypiec i fortepianu · Online</span>
+      </p>
+      <p class="copy">© <span id="year">2026</span> Yaneliua.
+        <span data-en>All rights reserved.</span>
+        <span data-ua>Всі права захищені.</span>
+        <span data-pl>Wszelkie prawa zastrzeżone.</span>
+      </p>
+    </div>
+  </footer>
+
+  
+  <dialog class="lightbox" id="lightbox" aria-label="Media viewer">
+    <button class="lb-close icon-btn" type="button" id="lbClose" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button class="lb-prev icon-btn" type="button" id="lbPrev" aria-label="Previous"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="lb-next icon-btn" type="button" id="lbNext" aria-label="Next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="lb-stage" id="lbStage"></div>
+  </dialog>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
