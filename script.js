@@ -135,6 +135,20 @@
   });
 
   
+  var galTrack = $('#galleryTrack');
+  function slideGal(dir) {
+    var card = $('.g-item', galTrack);
+    var step = card ? card.getBoundingClientRect().width + 22 : 320;
+    galTrack.scrollBy({ left: dir * step, behavior: 'smooth' });
+  }
+  $('#galPrev').addEventListener('click', function () { slideGal(-1); });
+  $('#galNext').addEventListener('click', function () { slideGal(1); });
+  galTrack.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { e.preventDefault(); slideGal(1); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); slideGal(-1); }
+  });
+
+  
   var items   = $$('.g-item');
   var box     = $('#lightbox');
   var stage   = $('#lbStage');
