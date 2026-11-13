@@ -50,7 +50,7 @@
   };
 
   
-  function currentLang() { return root.getAttribute('data-lang') || 'en'; }
+  function currentLang() { return store.get('yanelia-lang') || 'ua'; }
 
   function applyLang(l) {
     root.setAttribute('data-lang', l);

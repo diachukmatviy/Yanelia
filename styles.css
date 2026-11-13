@@ -5,8 +5,7 @@
    ========================================================= */
 
 
-:root,
-:root[data-theme="dark"] {
+:root {
   --bg:        #0a1020;   
   --bg-2:      #151d32;   
   --surface:   #101729;
@@ -18,19 +17,6 @@
   --line:      rgba(168, 185, 215, .16);
   --shadow:    0 30px 60px -30px rgba(0, 0, 0, .7);
   color-scheme: dark;
-}
-:root[data-theme="light"] {
-  --bg:        #f3f7fa;
-  --bg-2:      #e4ebf3;
-  --surface:   #ffffff;
-  --text:      #101729;
-  --text-2:    #51617d;
-  --accent:    #4b6d94;   
-  --accent-2:  #7897b6;
-  --accent-ink:#ffffff;
-  --line:      rgba(16, 23, 41, .12);
-  --shadow:    0 30px 60px -34px rgba(40, 62, 100, .45);
-  color-scheme: light;
 }
 
 :root {
